@@ -134,6 +134,19 @@
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
+            // Check if app is ready
+            if (!window.appReady) {
+                alert('App is still loading... Please try again in a moment.');
+                console.error('App not ready. appReady =', window.appReady);
+                return;
+            }
+            
+            if (typeof window.loginWithEmail !== 'function') {
+                alert('Authentication system not loaded. Please refresh the page.');
+                console.error('loginWithEmail not available:', typeof window.loginWithEmail);
+                return;
+            }
+
             // Reset error messages
             emailError.style.display = 'none';
             handleError.style.display = 'none';
@@ -178,7 +191,7 @@
                 btn.disabled = true;
 
                 // Login with Firebase
-                const result = await loginWithEmail(email, password);
+                const result = await window.loginWithEmail(email, password);
 
                 if (result.success) {
                     console.log('✅ Login successful for:', email);
@@ -206,6 +219,7 @@
                     btn.disabled = false;
                 }
             } catch (error) {
+                console.error('Login error:', error);
                 emailError.innerText = 'Login failed: ' + error.message;
                 emailError.style.display = 'block';
                 loginEmail.classList.add('input-error');
@@ -213,6 +227,7 @@
                 btn.innerHTML = 'Sign In to Dashboard';
                 btn.disabled = false;
             }
+        });
 
         loginEmail.addEventListener('focus', () => {
             emailError.style.display = 'none';

@@ -10,6 +10,9 @@ let userProfile = {
     uid: ''
 };
 
+// Flag to signal when app is ready
+window.appReady = false;
+
 // Firebase Authentication imports
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
@@ -385,3 +388,7 @@ window.startVerification = startVerification;
 window.awardPoint = awardPoint;
 window.openDropModal = openDropModal;
 window.closeModal = closeModal;
+
+// Signal that app is ready
+window.appReady = true;
+console.log('✅ App.js loaded and ready');

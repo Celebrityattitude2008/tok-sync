@@ -288,6 +288,19 @@
         document.getElementById('signup-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             
+            // Check if app is ready
+            if (!window.appReady) {
+                alert('App is still loading... Please try again in a moment.');
+                console.error('App not ready. appReady =', window.appReady);
+                return;
+            }
+            
+            if (typeof window.signupWithEmail !== 'function') {
+                alert('Authentication system not loaded. Please refresh the page.');
+                console.error('signupWithEmail not available:', typeof window.signupWithEmail);
+                return;
+            }
+            
             const fullname = document.getElementById('fullname').value.trim();
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value.trim();
@@ -320,7 +333,7 @@
                 btn.disabled = true;
                 
                 // Signup with Firebase
-                const result = await signupWithEmail(email, password, fullname, tiktokHandle);
+                const result = await window.signupWithEmail(email, password, fullname, tiktokHandle);
                 
                 if (result.success) {
                     // Send welcome email
@@ -337,6 +350,7 @@
                     btn.disabled = false;
                 }
             } catch (error) {
+                console.error('Signup error:', error);
                 alert('Error: ' + error.message);
                 const btn = e.target.querySelector('button[type="submit"]');
                 btn.innerHTML = 'Sign Up';
