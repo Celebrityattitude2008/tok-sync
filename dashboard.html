@@ -16,28 +16,31 @@
 </head>
 <body>
 
-    <nav class="sticky top-0 z-50 bg-black/90 border-b border-white/10 p-4">
+    <nav class="sticky top-0 z-50 bg-black/90 border-b border-white/10 p-3 sm:p-4">
         <div class="max-w-2xl mx-auto flex justify-between items-center">
             <a href="index.html" class="flex items-center space-x-2">
-                <img src="logo.png" class="h-8 w-8 rounded-full border border-cyan-400 object-cover">
-                <span class="font-black text-sm tracking-tighter tok-gradient text-transparent bg-clip-text">TOKSYNC</span>
+                <img src="logo.png" class="h-7 w-7 sm:h-8 sm:w-8 rounded-full border border-cyan-400 object-cover">
+                <span class="font-black text-xs sm:text-sm tracking-tighter tok-gradient text-transparent bg-clip-text">TOKSYNC</span>
             </a>
-            <div class="flex items-center space-x-4">
+            <div class="flex items-center space-x-3 sm:space-x-4">
+                <button onclick="requestNotificationPermission()" class="px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/40 rounded-lg transition-colors" title="Enable Notifications">
+                    🔔
+                </button>
                 <div class="text-right">
                     <p class="text-[10px] text-gray-500 font-bold uppercase">Your Points</p>
-                    <p id="points-display" class="text-cyan-400 font-black">0 pts</p>
+                    <p id="points-display" class="text-cyan-400 font-black text-sm sm:text-base">0 pts</p>
                 </div>
             </div>
         </div>
     </nav>
 
-    <main class="max-w-2xl mx-auto p-6">
+    <main class="max-w-2xl mx-auto p-4 sm:p-6">
         
-        <div class="glass-card rounded-3xl p-6 mb-8 border-pink-500/20">
-            <h2 class="text-xl font-black italic mb-2 uppercase tracking-tight">Daily Link Drop</h2>
-            <p class="text-xs text-gray-400 mb-6 font-medium">Earn 5 points to unlock your daily slot.</p>
+        <div class="glass-card rounded-3xl p-5 sm:p-6 mb-6 sm:mb-8 border-pink-500/20">
+            <h2 class="text-lg sm:text-xl font-black italic mb-2 uppercase tracking-tight">Daily Link Drop</h2>
+            <p class="text-xs text-gray-400 mb-5 sm:mb-6 font-medium">Earn 5 points to unlock your daily slot.</p>
             
-            <div class="w-full bg-white/10 h-3 rounded-full overflow-hidden mb-2">
+            <div class="w-full bg-white/10 h-2 sm:h-3 rounded-full overflow-hidden mb-2">
                 <div class="tok-gradient h-0 transition-all duration-500" id="progress-bar"></div>
             </div>
             <div class="flex justify-between text-[10px] font-bold text-gray-500 uppercase tracking-widest">
@@ -45,26 +48,26 @@
                 <span id="remaining-text" class="text-pink-500">5 Remaining</span>
             </div>
 
-            <button id="drop-btn" disabled onclick="openDropModal()" class="w-full bg-white/5 text-gray-600 font-black py-4 rounded-2xl text-xs uppercase tracking-widest mt-6 border border-white/5 transition-all">
+            <button id="drop-btn" disabled onclick="openDropModal()" class="w-full bg-white/5 text-gray-600 font-black py-3 sm:py-4 rounded-2xl text-xs uppercase tracking-widest mt-5 sm:mt-6 border border-white/5 transition-all">
                 🔒 Drop My TikTok Link
             </button>
         </div>
 
-        <div class="flex items-center justify-between mb-6">
-            <h3 class="font-black text-sm uppercase tracking-widest text-gray-400">Current Queue</h3>
+        <div class="flex items-center justify-between mb-4 sm:mb-6">
+            <h3 class="font-black text-xs sm:text-sm uppercase tracking-widest text-gray-400">Current Queue</h3>
             <button onclick="location.reload()" class="text-[10px] font-bold text-cyan-400">REFRESH</button>
         </div>
 
-        <div id="task-list" class="space-y-4">
-            <div class="task-card glass-card rounded-2xl p-4 flex items-center justify-between transition-all duration-300">
-                <div class="flex items-center space-x-4">
-                    <div class="h-12 w-12 bg-zinc-800 rounded-lg flex items-center justify-center border border-white/5 text-xl">🎬</div>
-                    <div>
-                        <p class="text-sm font-bold">@celebrityattitude1</p>
+        <div id="task-list" class="space-y-3 sm:space-y-4">
+            <div class="task-card glass-card rounded-2xl p-3 sm:p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 transition-all duration-300 border border-white/5">
+                <div class="flex items-center space-x-2 sm:space-x-4 w-full sm:w-auto">
+                    <div class="h-10 w-10 sm:h-12 sm:w-12 bg-zinc-800 rounded-lg flex items-center justify-center border border-white/5 text-lg sm:text-xl flex-shrink-0">🎬</div>
+                    <div class="min-w-0 flex-1">
+                        <p class="text-xs sm:text-sm font-bold truncate">@celebrityattitude1</p>
                         <p class="text-[10px] text-gray-500 uppercase font-bold tracking-tighter">Like + Comment</p>
                     </div>
                 </div>
-                <button onclick="startVerification(this, 'https://tiktok.com/@celebrityattitude1')" class="bg-cyan-400 text-black font-black px-4 py-2 rounded-lg text-[10px] uppercase tracking-widest hover:bg-white transition">
+                <button onclick="startVerification(this, 'https://tiktok.com/@celebrityattitude1')" class="bg-cyan-400 text-black font-black px-3 sm:px-4 py-2 rounded-lg text-[10px] uppercase tracking-widest hover:bg-white transition flex-shrink-0 w-full sm:w-auto">
                     ENGAGE
                 </button>
             </div>
@@ -129,18 +132,18 @@
         </a>
     </nav>
 
-    <div id="drop-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-6 bg-black/90 backdrop-blur-sm">
-        <div class="glass-card w-full max-w-sm rounded-3xl p-8 border-cyan-400/50 shadow-[0_0_50px_rgba(0,242,234,0.2)]">
-            <div class="text-center mb-6">
-                <div class="h-16 w-16 bg-cyan-400/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-cyan-400">
-                    <svg class="w-8 h-8 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+    <div id="drop-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 sm:p-6 bg-black/90 backdrop-blur-sm">
+        <div class="glass-card w-full max-w-sm rounded-3xl p-6 sm:p-8 border-cyan-400/50 shadow-[0_0_50px_rgba(0,242,234,0.2)]">
+            <div class="text-center mb-6 sm:mb-8">
+                <div class="h-14 w-14 sm:h-16 sm:w-16 bg-cyan-400/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-cyan-400">
+                    <svg class="w-7 h-7 sm:w-8 sm:h-8 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                 </div>
-                <h2 class="text-2xl font-black uppercase italic">Drop Your Link</h2>
+                <h2 class="text-xl sm:text-2xl font-black uppercase italic">Drop Your Link</h2>
                 <p class="text-xs text-gray-500 mt-2">Points verified. Enter your TikTok video URL below.</p>
             </div>
             <form id="link-drop-form" class="space-y-4">
                 <input type="url" id="tiktok-url" required placeholder="https://vm.tiktok.com/..." class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-cyan-400 outline-none text-white">
-                <button type="submit" class="w-full tok-gradient text-black font-black py-4 rounded-xl text-xs uppercase tracking-widest hover:opacity-90 transition transform">Boost My Video</button>
+                <button type="submit" class="w-full tok-gradient text-black font-black py-3 sm:py-4 rounded-xl text-xs uppercase tracking-widest hover:opacity-90 transition transform\">Boost My Video</button>
                 <button type="button" onclick="closeModal()" class="w-full text-gray-500 text-[10px] font-bold uppercase tracking-widest mt-2 hover:text-white transition">Cancel</button>
             </form>
         </div>

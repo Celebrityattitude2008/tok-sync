@@ -15,12 +15,12 @@
 </head>
 <body>
 
-    <section class="p-8 text-center">
-        <h1 class="text-4xl font-black italic uppercase tracking-tighter mb-2">Global <span class="text-transparent bg-clip-text tok-gradient">Ranks</span></h1>
-        <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.2em]">Top contributors of the last 24 hours</p>
+    <section class="p-4 sm:p-8 text-center">
+        <h1 class="text-3xl sm:text-4xl font-black italic uppercase tracking-tighter mb-2">Global <span class="text-transparent bg-clip-text tok-gradient">Ranks</span></h1>
+        <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.2em]">Top 10 contributors 🏆</p>
     </section>
 
-    <main class="max-w-2xl mx-auto px-6">
+    <main class="max-w-2xl mx-auto px-4 sm:px-6">
         
         <div class="flex items-end justify-center gap-4 mb-12 mt-4">
             <div class="flex flex-col items-center">
@@ -41,28 +41,34 @@
             </div>
         </div>
 
-        <div class="space-y-3" id="leaderboard-list">
-            <div class="glass-card rounded-2xl p-4 flex items-center justify-between border-white/5">
-                <div class="flex items-center space-x-4">
-                    <span class="font-black text-gray-600 w-4">4</span>
-                    <img src="logo.png" class="h-10 w-10 rounded-full border border-white/10">
-                    <p class="font-bold text-sm">@creator_prime</p>
+        <div class="space-y-2 sm:space-y-3" id="leaderboard-list">
+            <div class="glass-card rounded-2xl p-3 sm:p-4 flex items-center justify-between border-white/5">
+                <div class="flex items-center space-x-3 sm:space-x-4 min-w-0 flex-1">
+                    <span class="font-black text-cyan-400 text-lg flex-shrink-0">#4</span>
+                    <div class="h-10 w-10 rounded-full border border-white/10 bg-zinc-800 flex items-center justify-center flex-shrink-0">🔥</div>
+                    <div class="min-w-0 flex-1">
+                        <p class="font-bold text-xs sm:text-sm truncate">@creator_prime</p>
+                        <p class="text-[10px] text-gray-500 uppercase font-bold">Creator</p>
+                    </div>
                 </div>
-                <div class="text-right">
-                    <p class="text-cyan-400 font-black text-sm">842</p>
-                    <p class="text-[8px] text-gray-500 font-bold uppercase">Sync Score</p>
+                <div class="text-right flex-shrink-0 ml-2">
+                    <p class="text-cyan-400 font-black text-sm sm:text-base">842</p>
+                    <p class="text-[8px] text-gray-500 font-bold uppercase">Points</p>
                 </div>
             </div>
 
-            <div class="glass-card rounded-2xl p-4 flex items-center justify-between border-white/5">
-                <div class="flex items-center space-x-4">
-                    <span class="font-black text-gray-600 w-4">5</span>
-                    <img src="logo.png" class="h-10 w-10 rounded-full border border-white/10">
-                    <p class="font-bold text-sm">@tok_star</p>
+            <div class="glass-card rounded-2xl p-3 sm:p-4 flex items-center justify-between border-white/5">
+                <div class="flex items-center space-x-3 sm:space-x-4 min-w-0 flex-1">
+                    <span class="font-black text-cyan-400 text-lg flex-shrink-0">#5</span>
+                    <div class="h-10 w-10 rounded-full border border-white/10 bg-zinc-800 flex items-center justify-center flex-shrink-0">✨</div>
+                    <div class="min-w-0 flex-1">
+                        <p class="font-bold text-xs sm:text-sm truncate">@tok_star</p>
+                        <p class="text-[10px] text-gray-500 uppercase font-bold">Influencer</p>
+                    </div>
                 </div>
-                <div class="text-right">
-                    <p class="text-cyan-400 font-black text-sm">710</p>
-                    <p class="text-[8px] text-gray-500 font-bold uppercase">Sync Score</p>
+                <div class="text-right flex-shrink-0 ml-2">
+                    <p class="text-cyan-400 font-black text-sm sm:text-base">710</p>
+                    <p class="text-[8px] text-gray-500 font-bold uppercase">Points</p>
                 </div>
             </div>
         </div>
@@ -88,27 +94,71 @@
     </nav>
 
     <script src="app.js"></script>
-    <script src="tiktoks.js"></script>
-    <script>
-        function loadRankings() {
-            // Sort creators by engagement score (highest first)
-            const sortedCreators = [...tiktokDatabase].sort((a, b) => b.engagement - a.engagement);
-            
+    <script type="module">
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        async function loadRankingsFromFirebase() {
+            try {
+                const rtdb = getDatabase();
+                const usersRef = ref(rtdb, 'users');
+                const snapshot = await get(usersRef);
+                
+                if (snapshot.exists()) {
+                    const usersData = snapshot.val();
+                    const usersArray = [];
+                    
+                    // Convert object to array and sort by points
+                    Object.keys(usersData).forEach(userId => {
+                        const user = usersData[userId];
+                        usersArray.push({
+                            uid: userId,
+                            handle: user.handle || '@unknown',
+                            name: user.name || 'Anonymous',
+                            points: user.points || 0,
+                            category: user.category || 'Creator'
+                        });
+                    });
+                    
+                    // Sort by points (highest first)
+                    usersArray.sort((a, b) => b.points - a.points);
+                    
+                    // Display top 10
+                    displayRankings(usersArray.slice(0, 10));
+                } else {
+                    console.log('No users found in database');
+                    displayNoDataMessage();
+                }
+            } catch (error) {
+                console.error('Error loading rankings:', error);
+                displayNoDataMessage();
+            }
+        }
+
+        function displayRankings(users) {
+            if (users.length === 0) {
+                displayNoDataMessage();
+                return;
+            }
+
             // Update podium with top 3
-            const topThree = sortedCreators.slice(0, 3);
-            const podium = document.querySelector('.flex.items-end.justify-center');
+            const topThree = users.slice(0, 3);
+            const podiumContainer = document.querySelector('.flex.items-end.justify-center');
             
-            if (podium && topThree.length > 0) {
-                let podiumHTML = '<div class="flex items-end justify-center gap-4 mb-12 mt-4">';
+            if (podiumContainer) {
+                let podiumHTML = '<div class="flex items-end justify-center gap-2 sm:gap-4 mb-12 mt-4">';
                 
                 // Position 2
                 if (topThree[1]) {
+                    const emoji = getEmojiForRank(1);
                     podiumHTML += `
                         <div class="flex flex-col items-center">
-                            <div class="h-12 w-12 rounded-full border-2 border-gray-400 bg-zinc-800 flex items-center justify-center text-lg">${topThree[1].emoji}</div>
-                            <div class="bg-gray-400 text-black font-black px-3 py-1 rounded-t-lg text-xs">#2</div>
-                            <div class="bg-white/5 w-20 h-16 rounded-b-lg border border-white/10 flex items-center justify-center text-[10px] font-bold px-2">
-                                <div class="text-center">${topThree[1].handle}<br><span class="text-gray-400">${topThree[1].engagement}/10</span></div>
+                            <div class="h-10 sm:h-12 w-10 sm:w-12 rounded-full border-2 border-gray-400 bg-zinc-800 flex items-center justify-center text-base sm:text-lg">${emoji}</div>
+                            <div class="bg-gray-400 text-black font-black px-2 sm:px-3 py-1 rounded-t-lg text-xs">#2</div>
+                            <div class="bg-white/5 w-16 sm:w-20 h-12 sm:h-16 rounded-b-lg border border-white/10 flex items-center justify-center text-[9px] sm:text-[10px] font-bold px-2">
+                                <div class="text-center truncate">
+                                    <div class="truncate">${topThree[1].handle}</div>
+                                    <div class="text-gray-400 text-xs font-black">${topThree[1].points}pts</div>
+                                </div>
                             </div>
                         </div>
                     `;
@@ -116,13 +166,17 @@
                 
                 // Position 1 (Center - Gold)
                 if (topThree[0]) {
+                    const emoji = getEmojiForRank(0);
                     podiumHTML += `
                         <div class="flex flex-col items-center">
                             <div class="text-yellow-400 text-2xl mb-1">👑</div>
-                            <div class="h-20 w-20 rounded-full border-4 border-yellow-500 bg-zinc-800 flex items-center justify-center text-2xl shadow-[0_0_20px_rgba(250,204,21,0.4)]">${topThree[0].emoji}</div>
-                            <div class="bg-yellow-500 text-black font-black px-4 py-1 rounded-t-lg text-sm">#1</div>
-                            <div class="bg-white/10 w-24 h-20 rounded-b-lg border border-yellow-500/30 flex items-center justify-center text-xs font-black px-2">
-                                <div class="text-center">${topThree[0].handle}<br><span class="text-yellow-400 font-black">${topThree[0].engagement}/10</span></div>
+                            <div class="h-16 sm:h-20 w-16 sm:w-20 rounded-full border-4 border-yellow-500 bg-zinc-800 flex items-center justify-center text-xl sm:text-2xl shadow-[0_0_20px_rgba(250,204,21,0.4)]">${emoji}</div>
+                            <div class="bg-yellow-500 text-black font-black px-3 sm:px-4 py-1 rounded-t-lg text-sm">#1</div>
+                            <div class="bg-white/10 w-20 sm:w-24 h-16 sm:h-20 rounded-b-lg border border-yellow-500/30 flex items-center justify-center text-[9px] sm:text-xs font-black px-2">
+                                <div class="text-center truncate">
+                                    <div class="truncate">${topThree[0].handle}</div>
+                                    <div class="text-yellow-400 font-black text-xs sm:text-sm">${topThree[0].points}pts</div>
+                                </div>
                             </div>
                         </div>
                     `;
@@ -130,56 +184,80 @@
                 
                 // Position 3
                 if (topThree[2]) {
+                    const emoji = getEmojiForRank(2);
                     podiumHTML += `
                         <div class="flex flex-col items-center">
-                            <div class="h-12 w-12 rounded-full border-2 border-orange-600 bg-zinc-800 flex items-center justify-center text-lg">${topThree[2].emoji}</div>
-                            <div class="bg-orange-600 text-white font-black px-3 py-1 rounded-t-lg text-xs">#3</div>
-                            <div class="bg-white/5 w-20 h-12 rounded-b-lg border border-white/10 flex items-center justify-center text-[10px] font-bold px-2">
-                                <div class="text-center">${topThree[2].handle}<br><span class="text-gray-400">${topThree[2].engagement}/10</span></div>
+                            <div class="h-10 sm:h-12 w-10 sm:w-12 rounded-full border-2 border-orange-600 bg-zinc-800 flex items-center justify-center text-base sm:text-lg">${emoji}</div>
+                            <div class="bg-orange-600 text-white font-black px-2 sm:px-3 py-1 rounded-t-lg text-xs">#3</div>
+                            <div class="bg-white/5 w-16 sm:w-20 h-10 sm:h-12 rounded-b-lg border border-white/10 flex items-center justify-center text-[9px] sm:text-[10px] font-bold px-2">
+                                <div class="text-center truncate">
+                                    <div class="truncate">${topThree[2].handle}</div>
+                                    <div class="text-gray-400 text-xs font-black">${topThree[2].points}pts</div>
+                                </div>
                             </div>
                         </div>
                     `;
                 }
                 
                 podiumHTML += '</div>';
-                podium.replaceWith((new DOMParser()).parseFromString(podiumHTML, 'text/html').body.firstChild);
+                const newPodium = new DOMParser().parseFromString(podiumHTML, 'text/html').body.firstChild;
+                podiumContainer.replaceWith(newPodium);
             }
             
-            // Update leaderboard list with remaining creators
+            // Update leaderboard list with remaining users (4-10)
             const leaderboardList = document.getElementById('leaderboard-list');
             if (leaderboardList) {
-                const remaining = sortedCreators.slice(3);
+                const remaining = users.slice(3, 10);
                 let listHTML = '';
                 
-                remaining.forEach((creator, index) => {
+                remaining.forEach((user, index) => {
                     const rank = index + 4;
+                    const emoji = getEmojiForRank(index + 3);
+                    const rankColor = rank <= 5 ? 'text-pink-500' : 'text-cyan-400';
+                    
                     listHTML += `
-                        <div class="glass-card rounded-2xl p-4 flex items-center justify-between border-white/5">
-                            <div class="flex items-center space-x-4">
-                                <span class="font-black text-cyan-400 text-lg">#${rank}</span>
-                                <div class="h-10 w-10 rounded-full bg-zinc-800 flex items-center justify-center border border-white/10 text-lg">${creator.emoji}</div>
-                                <div>
-                                    <p class="font-bold text-sm">${creator.handle}</p>
-                                    <p class="text-[10px] text-gray-500 uppercase font-bold">${creator.category}</p>
+                        <div class="glass-card rounded-2xl p-3 sm:p-4 flex items-center justify-between border-white/5 hover:border-white/20 transition">
+                            <div class="flex items-center space-x-3 sm:space-x-4 min-w-0 flex-1">
+                                <span class="font-black ${rankColor} text-lg flex-shrink-0">#${rank}</span>
+                                <div class="h-10 w-10 rounded-full bg-zinc-800 flex items-center justify-center border border-white/10 text-lg flex-shrink-0">${emoji}</div>
+                                <div class="min-w-0 flex-1">
+                                    <p class="font-bold text-xs sm:text-sm truncate">${user.handle}</p>
+                                    <p class="text-[10px] text-gray-500 uppercase font-bold truncate">${user.name}</p>
                                 </div>
                             </div>
-                            <span class="font-black text-cyan-400 text-lg">${creator.engagement}/10</span>
+                            <div class="text-right flex-shrink-0 ml-2">
+                                <p class="font-black text-cyan-400 text-sm sm:text-base">${user.points}</p>
+                                <p class="text-[8px] text-gray-500 font-bold uppercase">Points</p>
+                            </div>
                         </div>
                     `;
                 });
                 
-                leaderboardList.innerHTML = listHTML;
+                leaderboardList.innerHTML = listHTML || '<div class="text-center text-gray-500 py-8">No additional users found</div>';
             }
         }
 
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', loadRankings);
-        } else {
-            loadRankings();
+        function displayNoDataMessage() {
+            const leaderboardList = document.getElementById('leaderboard-list');
+            if (leaderboardList) {
+                leaderboardList.innerHTML = '<div class="text-center text-gray-500 py-12"><p class="mb-4">📊 No rankings yet</p><p class="text-sm">Start engaging to appear on the leaderboard!</p></div>';
+            }
         }
 
-        // Auto-reload rankings every 10 minutes
-        setInterval(loadRankings, 10 * 60 * 1000);
+        function getEmojiForRank(index) {
+            const emojis = ['🎯', '⚡', '💫', '🔥', '✨', '🎬', '💪', '🚀', '🌟', '👑'];
+            return emojis[index % emojis.length];
+        }
+
+        // Load rankings on page load
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadRankingsFromFirebase);
+        } else {
+            loadRankingsFromFirebase();
+        }
+
+        // Auto-reload rankings every 30 seconds
+        setInterval(loadRankingsFromFirebase, 30 * 1000);
     </script>
 </body>
 </html>

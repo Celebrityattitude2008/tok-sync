@@ -54,7 +54,11 @@
                     <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"></path></svg>
                 </div>
 
-                <button id="logout-btn" class="w-full bg-red-500/10 text-red-500 font-black py-4 rounded-2xl text-xs uppercase tracking-widest mt-6 border border-red-500/20 hover:bg-red-500 hover:text-white transition-all">
+                <a href="admin.html" class="block w-full bg-purple-500/10 text-purple-400 font-black py-4 rounded-2xl text-xs uppercase tracking-widest mt-6 border border-purple-500/20 hover:bg-purple-500 hover:text-white transition-all text-center">
+                    🛡️ Admin Panel
+                </a>
+
+                <button id="logout-btn" class="w-full bg-red-500/10 text-red-500 font-black py-4 rounded-2xl text-xs uppercase tracking-widest mt-3 border border-red-500/20 hover:bg-red-500 hover:text-white transition-all">
                     Secure Logout
                 </button>
             </div>
@@ -85,20 +89,21 @@
         function setupLogoutHandler() {
             const logoutBtn = document.getElementById('logout-btn');
             if (logoutBtn) {
-                logoutBtn.addEventListener('click', () => {
+                logoutBtn.addEventListener('click', async () => {
                     if (confirm("Are you sure you want to sign out?")) {
-                        localStorage.clear();
-                        window.location.href = "login.html";
+                        const result = await logoutUser();
+                        if (result.success) {
+                            window.location.href = "login.html";
+                        } else {
+                            alert('Logout failed: ' + result.error);
+                        }
                     }
                 });
             }
         }
 
         function displayUserProfile() {
-            const userProfile = JSON.parse(localStorage.getItem('userProfile'));
-            const userPoints = localStorage.getItem('userPoints') || 0;
-            
-            if (userProfile) {
+            if (currentUser) {
                 document.getElementById('display-name').innerText = "Welcome " + (userProfile.name || "TokSync User");
                 document.getElementById('display-handle').innerText = userProfile.tiktokHandle || "@pending";
                 document.getElementById('total-points').innerText = userPoints || 0;
@@ -106,16 +111,16 @@
                 
                 // Setup logout handler AFTER content is displayed
                 setupLogoutHandler();
-            } else {
-                window.location.href = "index.html";
             }
         }
 
         // Display profile when page loads
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', displayUserProfile);
+            document.addEventListener('DOMContentLoaded', () => {
+                setTimeout(displayUserProfile, 1000);
+            });
         } else {
-            displayUserProfile();
+            setTimeout(displayUserProfile, 1000);
         }
     </script>
 </body>
