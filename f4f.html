@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Follow for Follow | TokSync</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #010101; color: white; padding-bottom: 90px; }
+        .tok-gradient { background: linear-gradient(90deg, #ff0050 0%, #00f2ea 100%); }
+        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .f4f-card:hover { border-color: #ff0050; box-shadow: 0 0 15px rgba(255,0,80,0.2); }
+    </style>
+</head>
+<body>
+
+    <header class="p-6 max-w-2xl mx-auto">
+        <h1 class="text-3xl font-black italic uppercase tracking-tighter">Community <span class="text-pink-500">Growth</span></h1>
+        <p class="text-xs text-gray-500 mt-1 uppercase font-bold tracking-widest">Follow niche-relevant creators to grow together.</p>
+    </header>
+
+    <main class="max-w-2xl mx-auto px-6 space-y-4">
+        
+        <div class="f4f-card glass-card rounded-3xl p-5 flex items-center justify-between transition-all border-l-4 border-l-pink-500">
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <img src="logo.png" class="h-14 w-14 rounded-full border-2 border-white/10 object-cover">
+                    <div class="absolute -bottom-1 -right-1 bg-pink-500 h-5 w-5 rounded-full border-2 border-black flex items-center justify-center text-[10px] font-bold">✓</div>
+                </div>
+                <div>
+                    <p class="font-black text-lg tracking-tight">@celebrityattitude1</p>
+                    <span class="bg-white/10 text-[9px] px-2 py-0.5 rounded-full font-bold uppercase text-gray-400">Funny / Dance
+                </div>
+            </div>
+            <button onclick="window.open('https://tiktok.com/@celebrityattitude1', '_blank')" class="tok-gradient text-black font-black px-6 py-2.5 rounded-xl text-xs uppercase tracking-tighter hover:scale-105 transition">
+                Follow
+            </button>
+        </div>
+
+        <div class="f4f-card glass-card rounded-3xl p-5 flex items-center justify-between transition-all border-l-4 border-l-cyan-400">
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <img src="logo.png" class="h-14 w-14 rounded-full border-2 border-white/10 object-cover">
+                    <div class="absolute -bottom-1 -right-1 bg-cyan-400 h-5 w-5 rounded-full border-2 border-black flex items-center justify-center text-[10px] font-bold">✓</div>
+                </div>
+                <div>
+                    <p class="font-black text-lg tracking-tight">@girlybella</p>
+                    <span class="bg-white/10 text-[9px] px-2 py-0.5 rounded-full font-bold uppercase text-gray-400">Music / Dance</span>
+                </div>
+            </div>
+            <button onclick="window.open('https://tiktok.com/@girlybella', '_blank')" class="tok-gradient text-black font-black px-6 py-2.5 rounded-xl text-xs uppercase tracking-tighter hover:scale-105 transition">
+                Follow
+            </button>
+        </div>
+
+        <div class="bg-pink-500/10 border border-pink-500/20 rounded-2xl p-4 mt-8">
+            <p class="text-[10px] text-pink-400 font-bold uppercase mb-1">💡 Pro Tip</p>
+            <p class="text-xs text-gray-400 leading-relaxed">Users who follow at least 10 people a day are 5x more likely to be followed back. Points are rewarded for every 5 follows!</p>
+        </div>
+
+    </main>
+
+    <nav class="fixed bottom-0 left-0 right-0 bg-black/95 border-t border-white/10 px-6 py-4 flex justify-between items-center z-50">
+        <a href="dashboard.html" class="flex flex-col items-center space-y-1 text-gray-600">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+            <span class="text-[10px] font-bold uppercase">Sync</span>
+        </a>
+        <a href="rank.html" class="flex flex-col items-center space-y-1 text-gray-600">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+            <span class="text-[10px] font-bold uppercase">Rank</span>
+        </a>
+        <a href="f4f.html" class="flex flex-col items-center space-y-1 text-pink-500">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+            <span class="text-[10px] font-bold uppercase">F4F</span>
+        </a>
+        <a href="me.html" class="flex flex-col items-center space-y-1 text-gray-600">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+            <span class="text-[10px] font-bold uppercase">Me</span>
+        </a>
+    </nav>
+
+    <script src="app.js"></script>
+    <script src="tiktoks.js"></script>
+    <script>
+        function loadF4FCreators() {
+            const container = document.getElementById('f4f-creators');
+            const randomCreators = getRandomTiktoks(6);
+            
+            const creatorHTML = randomCreators.map((tiktok, index) => {
+                const borderColor = index % 2 === 0 ? 'border-l-pink-500' : 'border-l-cyan-400';
+                const badgeColor = index % 2 === 0 ? 'bg-pink-500' : 'bg-cyan-400';
+                
+                return `
+                    <div class="f4f-card glass-card rounded-3xl p-5 flex items-center justify-between transition-all border-l-4 ${borderColor}">
+                        <div class="flex items-center space-x-4">
+                            <div class="relative">
+                                <div class="h-14 w-14 rounded-full border-2 border-white/10 object-cover bg-zinc-800 flex items-center justify-center text-2xl">${tiktok.emoji}</div>
+                                <div class="absolute -bottom-1 -right-1 ${badgeColor} h-5 w-5 rounded-full border-2 border-black flex items-center justify-center text-[10px] font-bold">✓</div>
+                            </div>
+                            <div>
+                                <p class="font-black text-lg tracking-tight">${tiktok.handle}</p>
+                                <span class="bg-white/10 text-[9px] px-2 py-0.5 rounded-full font-bold uppercase text-gray-400">${tiktok.category}</span>
+                            </div>
+                        </div>
+                        <button onclick="window.open('${tiktok.url}', '_blank')" class="tok-gradient text-black font-black px-6 py-2.5 rounded-xl text-xs uppercase tracking-tighter hover:scale-105 transition">
+                            Follow
+                        </button>
+                    </div>
+                `;
+            }).join('');
+            
+            container.innerHTML = creatorHTML + `
+                <div class="bg-pink-500/10 border border-pink-500/20 rounded-2xl p-4 mt-8">
+                    <p class="text-[10px] text-pink-400 font-bold uppercase mb-1">💡 Pro Tip</p>
+                    <p class="text-xs text-gray-400 leading-relaxed">Users who follow at least 10 people a day are 5x more likely to be followed back. Points are rewarded for every 5 follows!</p>
+                </div>
+                <button onclick="loadF4FCreators()" class="w-full bg-white/5 border border-white/10 hover:bg-white/10 text-cyan-400 font-black py-3 rounded-xl text-[10px] uppercase tracking-widest mt-6 transition">
+                    🔄 Get New Creators
+                </button>
+            `;
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadF4FCreators);
+        } else {
+            loadF4FCreators();
+        }
+
+        // Auto-reload F4F creators every 5 minutes
+        setInterval(loadF4FCreators, 5 * 60 * 1000);
+    </script>
+</body>
+</html>

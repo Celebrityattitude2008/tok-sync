@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TokSync | Hack the TikTok Algorithm</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        
+        body { 
+            font-family: 'Inter', sans-serif;
+            background-color: #010101; 
+        }
+
+        .tok-gradient {
+            background: linear-gradient(90deg, #ff0050 0%, #00f2ea 100%);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Chatbot Styles */
+        .chatbot-widget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 999;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .chatbot-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(90deg, #ff0050 0%, #00f2ea 100%);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 20px rgba(0, 242, 234, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .chatbot-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 30px rgba(255, 0, 80, 0.6);
+        }
+
+        .chatbot-button.active {
+            width: 60px;
+            height: 60px;
+            background: #ff0050;
+        }
+
+        .chatbot-container {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 400px;
+            max-height: 500px;
+            background: rgba(15, 15, 15, 0.95);
+            border: 1px solid rgba(0, 242, 234, 0.3);
+            border-radius: 20px;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.8);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .chatbot-container.active {
+            display: flex;
+        }
+
+        .chatbot-header {
+            background: linear-gradient(90deg, #ff0050 0%, #00f2ea 100%);
+            padding: 16px;
+            color: white;
+            font-weight: 900;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chatbot-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 18px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+
+        .chatbot-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .message {
+            display: flex;
+            gap: 8px;
+            word-wrap: break-word;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message-content {
+            max-width: 280px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .message.bot .message-content {
+            background: rgba(0, 242, 234, 0.1);
+            border: 1px solid rgba(0, 242, 234, 0.3);
+            color: #e0e0e0;
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(90deg, #ff0050 0%, #00f2ea 100%);
+            color: white;
+            border-radius: 12px 2px 12px 12px;
+        }
+
+        .chatbot-input-area {
+            display: flex;
+            gap: 8px;
+            padding: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .chatbot-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 10px 12px;
+            color: white;
+            font-size: 13px;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .chatbot-input:focus {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(0, 242, 234, 0.5);
+        }
+
+        .chatbot-send {
+            background: linear-gradient(90deg, #ff0050 0%, #00f2ea 100%);
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-weight: 700;
+            transition: all 0.2s;
+        }
+
+        .chatbot-send:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+        }
+
+        .chatbot-send:active {
+            transform: scale(0.98);
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #00f2ea;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                opacity: 0.3;
+            }
+            30% {
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .chatbot-container {
+                width: calc(100vw - 40px);
+                max-height: calc(100vh - 120px);
+            }
+        }
+    </style>
+</head>
+<body class="text-white">
+
+    <nav class="sticky top-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/10">
+        <div class="flex justify-between items-center p-4 max-w-6xl mx-auto">
+            
+            <a href="index.html" class="relative group">
+                <img src="logo.png" alt="TokSync Logo" 
+                     class="h-12 w-12 object-cover rounded-full border-2 border-white/20 shadow-[0_0_15px_rgba(0,242,234,0.4)] group-hover:shadow-[0_0_20px_rgba(255,0,80,0.6)] transition-all duration-300">
+            </a>
+            
+            <div class="hidden md:flex space-x-8 text-sm font-medium">
+                <a href="#how-it-works" class="hover:text-cyan-400 transition font-bold tracking-tight">HOW IT WORKS</a>
+                <a href="#leaderboard" class="hover:text-pink-500 transition font-bold tracking-tight">LEADERBOARD</a>
+                <a href="#rules" class="hover:text-gray-400 transition font-bold tracking-tight">RULES</a>
+            </div>
+            <div class="flex items-center space-x-4">
+                <a href="signup.html" class="text-sm font-bold hover:text-cyan-400 transition">Sign Up</a>
+                <a href="signup.html" class="tok-gradient text-black px-5 py-2 rounded-full font-bold text-sm hover:opacity-90 transition">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="max-w-4xl mx-auto text-center py-24 px-6">
+        <div class="inline-block px-4 py-1.5 mb-6 text-xs font-bold tracking-widest uppercase border border-white/20 rounded-full text-gray-400">
+            🚀 Boost Your Reach Manually
+        </div>
+        <h1 class="text-5xl md:text-8xl font-black mb-8 leading-tight">
+            Stop Posting to <br>
+            <span class="text-transparent bg-clip-text tok-gradient">Zero Views.</span>
+        </h1>
+        <p class="text-lg md:text-xl text-gray-400 mb-10 max-w-2xl mx-auto">
+            The first engagement platform built specifically for TikTok creators. Join the sync, engage with others, and unlock viral potential.
+        </p>
+        <div class="flex flex-col md:flex-row justify-center items-center gap-4">
+            <a href="signup.html" class="w-full md:w-auto tok-gradient text-black font-black py-5 px-12 rounded-full text-lg shadow-[0_0_20px_rgba(0,242,234,0.3)] hover:scale-105 transition transform">
+                JOIN THE SYNC
+            </a>
+            <a href="rank.html" class="w-full md:w-auto bg-white/5 border border-white/10 hover:bg-white/10 py-5 px-12 rounded-full text-lg font-bold transition">
+                View Live Queue
+            </a>
+        </div>
+    </header>
+
+    <section class="max-w-6xl mx-auto px-6 py-12">
+        <div class="flex items-center justify-between mb-8">
+            <h2 class="text-xl md:text-2xl font-black flex items-center">
+                <span class="relative flex h-3 w-3 mr-3">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                </span>
+                LIVE ENGAGEMENT QUEUE
+            </h2>
+            <div class="text-xs font-mono text-gray-500 uppercase tracking-widest">Active Now: 1,242 Users</div>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+            <div class="group relative bg-zinc-900 rounded-2xl overflow-hidden border border-white/5 hover:border-cyan-400/50 transition duration-500">
+                <div class="aspect-[9/16] bg-zinc-800 flex items-center justify-center relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10"></div>
+                    <svg class="w-12 h-12 text-white/20 group-hover:text-cyan-400 transition" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+                <div class="absolute bottom-0 left-0 right-0 p-4 z-20">
+                    <p class="text-sm font-bold truncate">@celebrityattitude1</p>
+                    <div class="flex items-center mt-2 w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
+                        <div class="bg-cyan-400 h-full w-[95%]"></div>
+                    </div>
+                    <p class="text-[10px] text-gray-400 mt-2 font-bold uppercase tracking-tighter">Engagement: 9/10 Verified</p>
+                </div>
+            </div>
+
+            <div class="group relative bg-zinc-900 rounded-2xl overflow-hidden border border-white/5 hover:border-pink-500/50 transition duration-500">
+                <div class="aspect-[9/16] bg-zinc-800 flex items-center justify-center relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10"></div>
+                    <svg class="w-12 h-12 text-white/20 group-hover:text-pink-500 transition" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+                <div class="absolute bottom-0 left-0 right-0 p-4 z-20">
+                    <p class="text-sm font-bold truncate">@trend_setter</p>
+                    <div class="flex items-center mt-2 w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
+                        <div class="bg-pink-500 h-full w-[80%]"></div>
+                    </div>
+                    <p class="text-[10px] text-gray-400 mt-2 font-bold uppercase tracking-tighter">Engagement: 4/5 Verified</p>
+                </div>
+            </div>
+
+            <div class="hidden md:block group relative bg-zinc-900 rounded-2xl overflow-hidden border border-white/5 hover:border-cyan-400/50 transition duration-500">
+                <div class="aspect-[9/16] bg-zinc-800 flex items-center justify-center relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10"></div>
+                    <svg class="w-12 h-12 text-white/20 group-hover:text-cyan-400 transition" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+                <div class="absolute bottom-0 left-0 right-0 p-4 z-20">
+                    <p class="text-sm font-bold truncate">@jake_vlogs</p>
+                    <div class="flex items-center mt-2 w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
+                        <div class="bg-cyan-400 h-full w-[30%]"></div>
+                    </div>
+                    <p class="text-[10px] text-gray-400 mt-2 font-bold uppercase tracking-tighter">Engagement: 2/10 Verified</p>
+                </div>
+            </div>
+
+            <div class="hidden md:block group relative bg-zinc-900 rounded-2xl overflow-hidden border border-white/5 hover:border-pink-500/50 transition duration-500">
+                <div class="aspect-[9/16] bg-zinc-800 flex items-center justify-center relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10"></div>
+                    <svg class="w-12 h-12 text-white/20 group-hover:text-pink-500 transition" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+                <div class="absolute bottom-0 left-0 right-0 p-4 z-20">
+                    <p class="text-sm font-bold truncate">@chef_kyle</p>
+                    <div class="flex items-center mt-2 w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
+                        <div class="bg-pink-500 h-full w-[60%]"></div>
+                    </div>
+                    <p class="text-[10px] text-gray-400 mt-2 font-bold uppercase tracking-tighter">Engagement: 6/10 Verified</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="leaderboard" class="max-w-6xl mx-auto px-6 py-20">
+        <div class="glass-card rounded-3xl p-8 md:p-12 border border-white/10">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-black mb-4 uppercase italic tracking-tighter">Top Engagers</h2>
+                <p class="text-gray-400">Follow these creators to build your Follow-for-Follow network.</p>
+            </div>
+            
+            <div class="space-y-4 max-w-2xl mx-auto">
+                <div class="flex items-center justify-between p-4 rounded-xl bg-white/5 hover:bg-white/10 transition border border-white/5">
+                    <div class="flex items-center space-x-4">
+                        <span class="font-black text-cyan-400 text-lg">01</span>
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-cyan-400 to-blue-500"></div>
+                        <div>
+                            <p class="font-bold text-sm">@viral_master</p>
+                            <p class="text-[10px] text-gray-500 uppercase font-bold">4.2k Score</p>
+                        </div>
+                    </div>
+                    <button class="text-xs font-black uppercase tracking-widest px-4 py-2 border border-cyan-400/50 text-cyan-400 rounded-lg hover:bg-cyan-400 hover:text-black transition">Follow</button>
+                </div>
+
+                <div class="flex items-center justify-between p-4 rounded-xl bg-white/5 hover:bg-white/10 transition border border-white/5">
+                    <div class="flex items-center space-x-4">
+                        <span class="font-black text-pink-500 text-lg">02</span>
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-pink-500 to-purple-600"></div>
+                        <div>
+                            <p class="font-bold text-sm">@tiktok_queen</p>
+                            <p class="text-[10px] text-gray-500 uppercase font-bold">3.8k Score</p>
+                        </div>
+                    </div>
+                    <button class="text-xs font-black uppercase tracking-widest px-4 py-2 border border-pink-500/50 text-pink-500 rounded-lg hover:bg-pink-500 hover:text-white transition">Follow</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-20 border-t border-white/10 text-center">
+        <img src="logo.png" alt="TokSync Logo" class="h-8 w-auto mx-auto mb-8 opacity-50">
+        
+        <div class="flex justify-center space-x-6 text-gray-500 text-sm mb-8 font-bold uppercase tracking-widest">
+            <a href="#" class="hover:text-white transition">Privacy</a>
+            <a href="#" class="hover:text-white transition">Terms</a>
+            <a href="#" class="hover:text-white transition">Discord</a>
+        </div>
+        <p class="text-xs text-gray-600">
+            &copy; 2026 TokSync. Not affiliated with TikTok or ByteDance Ltd.
+        </p>
+    </footer>
+
+    <!-- Chatbot Widget -->
+    <div class="chatbot-widget">
+        <button class="chatbot-button" id="chatbot-toggle" onclick="toggleChatbot()">💬</button>
+        <div class="chatbot-container" id="chatbot-container">
+            <div class="chatbot-header">
+                <span>TokSync AI Guide 🤖</span>
+                <button class="chatbot-close" onclick="toggleChatbot()">✕</button>
+            </div>
+            <div class="chatbot-messages" id="chatbot-messages"></div>
+            <div class="chatbot-input-area">
+                <input type="text" class="chatbot-input" id="chatbot-input" placeholder="Ask me anything..." onkeypress="handleChatInput(event)">
+                <button class="chatbot-send" onclick="sendChatMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script src="tiktoks.js"></script>
+    <script>
+        // Chatbot functionality
+        let chatHistory = [];
+
+        function toggleChatbot() {
+            const container = document.getElementById('chatbot-container');
+            const button = document.getElementById('chatbot-toggle');
+            container.classList.toggle('active');
+            button.classList.toggle('active');
+            
+            if (container.classList.contains('active')) {
+                document.getElementById('chatbot-input').focus();
+                if (chatHistory.length === 0) {
+                    showBotMessage('Welcome to TokSync! 👋 I\'m your AI guide. How can I help you get started with growing your TikTok?');
+                }
+            }
+        }
+
+        function showBotMessage(text) {
+            const messagesDiv = document.getElementById('chatbot-messages');
+            const messageEl = document.createElement('div');
+            messageEl.className = 'message bot';
+            messageEl.innerHTML = `<div class="message-content">${escapeHtml(text)}</div>`;
+            messagesDiv.appendChild(messageEl);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            chatHistory.push({ role: 'bot', message: text });
+        }
+
+        function showUserMessage(text) {
+            const messagesDiv = document.getElementById('chatbot-messages');
+            const messageEl = document.createElement('div');
+            messageEl.className = 'message user';
+            messageEl.innerHTML = `<div class="message-content">${escapeHtml(text)}</div>`;
+            messagesDiv.appendChild(messageEl);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            chatHistory.push({ role: 'user', message: text });
+        }
+
+        function showTyping() {
+            const messagesDiv = document.getElementById('chatbot-messages');
+            const messageEl = document.createElement('div');
+            messageEl.className = 'message bot';
+            messageEl.id = 'typing-indicator';
+            messageEl.innerHTML = `<div class="message-content typing-indicator"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>`;
+            messagesDiv.appendChild(messageEl);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function removeTyping() {
+            const typingEl = document.getElementById('typing-indicator');
+            if (typingEl) typingEl.remove();
+        }
+
+        async function sendChatMessage() {
+            const input = document.getElementById('chatbot-input');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            showUserMessage(message);
+            input.value = '';
+            showTyping();
+            
+            try {
+                const response = await fetch('/api/chatbot', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: message })
+                });
+                
+                const data = await response.json();
+                removeTyping();
+                
+                if (data.success) {
+                    showBotMessage(data.message);
+                } else {
+                    showBotMessage('Sorry, I encountered an error. Please try again!');
+                }
+            } catch (error) {
+                removeTyping();
+                showBotMessage('Having trouble connecting... Try refreshing the page!');
+                console.error('Chat error:', error);
+            }
+        }
+
+        function handleChatInput(e) {
+            if (e.key === 'Enter') {
+                sendChatMessage();
+            }
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Load random TikToks in the live queue on homepage
+        function loadHomepageQueue() {
+            const queueGrid = document.querySelector('.grid.grid-cols-2');
+            if (queueGrid) {
+                const randomTiktoks = getRandomTiktoks(4);
+                const cardHTML = randomTiktoks.map(tiktok => `
+                    <div class="group relative bg-zinc-900 rounded-2xl overflow-hidden border border-white/5 hover:border-${tiktok.color}-400/50 transition duration-500">
+                        <div class="aspect-[9/16] bg-zinc-800 flex items-center justify-center relative overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10"></div>
+                            <div class="w-12 h-12 text-white/20 group-hover:text-${tiktok.color}-400 transition text-4xl">${tiktok.emoji}</div>
+                        </div>
+                        <div class="absolute bottom-0 left-0 right-0 p-4 z-20">
+                            <p class="text-sm font-bold truncate">${tiktok.handle}</p>
+                            <div class="flex items-center mt-2 w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
+                                <div class="bg-${tiktok.color}-400 h-full w-[${tiktok.engagement * 10}%]"></div>
+                            </div>
+                            <p class="text-[10px] text-gray-400 mt-2 font-bold uppercase tracking-tighter">${tiktok.category} • ${tiktok.engagement}/10 Verified</p>
+                        </div>
+                    </div>
+                `).join('');
+                queueGrid.innerHTML = cardHTML;
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadHomepageQueue);
+        } else {
+            loadHomepageQueue();
+        }
+    </script>
+
+    <!-- HOW IT WORKS SECTION -->
+    <section id="how-it-works" class="max-w-6xl mx-auto px-6 py-24">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-black mb-4">How It Works</h2>
+            <p class="text-gray-400 text-lg max-w-2xl mx-auto">Get started in 4 simple steps and start building real engagement today.</p>
+        </div>
+
+        <div class="grid md:grid-cols-4 gap-8">
+            <!-- Step 1 -->
+            <div class="glass-card p-8 rounded-2xl hover:border-cyan-400/50 transition">
+                <div class="w-12 h-12 bg-cyan-400/20 rounded-lg flex items-center justify-center text-2xl font-black mb-6 text-cyan-400">1</div>
+                <h3 class="text-xl font-black mb-4">Sign Up</h3>
+                <p class="text-gray-400 text-sm leading-relaxed">Create your account with your name, email, and TikTok profile link. Takes less than 60 seconds.</p>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="glass-card p-8 rounded-2xl hover:border-pink-500/50 transition">
+                <div class="w-12 h-12 bg-pink-500/20 rounded-lg flex items-center justify-center text-2xl font-black mb-6 text-pink-500">2</div>
+                <h3 class="text-xl font-black mb-4">Engage Daily</h3>
+                <p class="text-gray-400 text-sm leading-relaxed">Visit, like, comment, and follow creators in the engagement queue. Each action earns you 1 point.</p>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="glass-card p-8 rounded-2xl hover:border-cyan-400/50 transition">
+                <div class="w-12 h-12 bg-cyan-400/20 rounded-lg flex items-center justify-center text-2xl font-black mb-6 text-cyan-400">3</div>
+                <h3 class="text-xl font-black mb-4">Unlock Drops</h3>
+                <p class="text-gray-400 text-sm leading-relaxed">Earn 5 points to unlock the "Drop Link" feature. Share your TikTok link with the community.</p>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="glass-card p-8 rounded-2xl hover:border-pink-500/50 transition">
+                <div class="w-12 h-12 bg-pink-500/20 rounded-lg flex items-center justify-center text-2xl font-black mb-6 text-pink-500">4</div>
+                <h3 class="text-xl font-black mb-4">Go Viral</h3>
+                <p class="text-gray-400 text-sm leading-relaxed">Receive genuine engagements from the community. Watch your views, likes, and followers grow.</p>
+            </div>
+        </div>
+
+        <!-- Key Features -->
+        <div class="mt-16 grid md:grid-cols-3 gap-6">
+            <div class="flex items-start gap-4">
+                <div class="text-2xl">⚡</div>
+                <div>
+                    <h4 class="font-bold mb-2">100% Free</h4>
+                    <p class="text-gray-400 text-sm">No hidden fees, no premium tiers. Everything is completely free to use.</p>
+                </div>
+            </div>
+            <div class="flex items-start gap-4">
+                <div class="text-2xl">🔒</div>
+                <div>
+                    <h4 class="font-bold mb-2">Secure & Safe</h4>
+                    <p class="text-gray-400 text-sm">Your data is encrypted and protected. We never ask for passwords or tokens.</p>
+                </div>
+            </div>
+            <div class="flex items-start gap-4">
+                <div class="text-2xl">⚙️</div>
+                <div>
+                    <h4 class="font-bold mb-2">Manual Engagement</h4>
+                    <p class="text-gray-400 text-sm">All engagements are manual and authentic. No bots, no automation, just real users.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RULES SECTION -->
+    <section id="rules" class="max-w-6xl mx-auto px-6 py-24 bg-white/3 rounded-3xl">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-black mb-4">Community Rules</h2>
+            <p class="text-gray-400 text-lg max-w-2xl mx-auto">Keep TokSync fair, safe, and fun for everyone. Follow these guidelines to maintain your account.</p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8">
+            <!-- DO's -->
+            <div>
+                <h3 class="text-2xl font-black mb-6 text-cyan-400">✅ DO's</h3>
+                <ul class="space-y-4">
+                    <li class="flex gap-3 items-start">
+                        <span class="text-cyan-400 font-black text-lg mt-0.5">→</span>
+                        <span class="text-gray-300"><strong>Engage Authentically</strong> - Watch videos, leave genuine comments, and follow accounts you're interested in.</span>
+                    </li>
+                    <li class="flex gap-3 items-start">
+                        <span class="text-cyan-400 font-black text-lg mt-0.5">→</span>
+                        <span class="text-gray-300"><strong>Be Respectful</strong> - Treat all creators and users with respect. No hate speech or harassment.</span>
+                    </li>
+                    <li class="flex gap-3 items-start">
+                        <span class="text-cyan-400 font-black text-lg mt-0.5">→</span>
+                        <span class="text-gray-300"><strong>Follow Platform Rules</strong> - Comply with TikTok's community guidelines in all your engagements.</span>
+                    </li>
+                    <li class="flex gap-3 items-start">
+                        <span class="text-cyan-400 font-black text-lg mt-0.5">→</span>
+                        <span class="text-gray-300"><strong>Verify Engagements</strong> - Complete the verification process for each engagement to earn points.</span>
+                    </li>
+                    <li class="flex gap-3 items-start">
+                        <span class="text-cyan-400 font-black text-lg mt-0.5">→</span>
+                        <span class="text-gray-300"><strong>Use Real Accounts</strong> - One account per person. Use your real TikTok profile.</span>
+                    </li>
+                    <li class="flex gap-3 items-start">
+                        <span class="text-cyan-400 font-black text-lg mt-0.5">→</span>
+                        <span class="text-gray-300"><strong>Share Quality Content</strong> - When you drop your link, make sure your TikToks are appropriate and authentic.</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- DON'Ts -->
+            <div>
+                <h3 class="text-2xl font-black mb-6 text-pink-500">❌ DON'Ts</h3>
+                <ul class="space-y-4">
+                    <li class="flex gap-3 items-start">
+                        <span class="text-pink-500 font-black text-lg mt-0.5">✕</span>
+                        <span class="text-gray-300"><strong>Don't Use Bots</strong> - Any bot-like behavior will result in account suspension or ban.</span>
+                    </li>
+                    <li class="flex gap-3 items-start">
+                        <span class="text-pink-500 font-black text-lg mt-0.5">✕</span>
+                        <span class="text-gray-300"><strong>Don't Spam</strong> - Spam comments, links, or promotional content. Keep it natural and relevant.</span>
+                    </li>
+                    <li class="flex gap-3 items-start">
+                        <span class="text-pink-500 font-black text-lg mt-0.5">✕</span>
+                        <span class="text-gray-300"><strong>Don't Share Private Info</strong> - Never share passwords, personal details, or sensitive information.</span>
+                    </li>
+                    <li class="flex gap-3 items-start">
+                        <span class="text-pink-500 font-black text-lg mt-0.5">✕</span>
+                        <span class="text-gray-300"><strong>Don't Fake Engagements</strong> - Actually perform the actions (like, comment, follow). Verification is mandatory.</span>
+                    </li>
+                    <li class="flex gap-3 items-start">
+                        <span class="text-pink-500 font-black text-lg mt-0.5">✕</span>
+                        <span class="text-gray-300"><strong>Don't Manipulate Points</strong> - Exploit system bugs or attempt to cheat the points system.</span>
+                    </li>
+                    <li class="flex gap-3 items-start">
+                        <span class="text-pink-500 font-black text-lg mt-0.5">✕</span>
+                        <span class="text-gray-300"><strong>Don't Engage in NSFW</strong> - Keep all interactions family-friendly and appropriate.</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Violations & Consequences -->
+        <div class="mt-12 p-8 bg-red-500/10 border border-red-500/30 rounded-2xl">
+            <h4 class="text-lg font-black text-red-400 mb-4">⚠️ Account Violations & Consequences</h4>
+            <ul class="space-y-2 text-sm text-gray-300">
+                <li><strong class="text-red-400">First Violation:</strong> Warning + 24-hour suspension</li>
+                <li><strong class="text-red-400">Second Violation:</strong> 7-day suspension + points reset to 0</li>
+                <li><strong class="text-red-400">Third Violation:</strong> Permanent ban from TokSync platform</li>
+                <li class="mt-4 text-xs text-gray-400">We reserve the right to take action against accounts that violate these rules or TikTok's guidelines.</li>
+            </ul>
+        </div>
+
+        <!-- Support -->
+        <div class="mt-8 p-8 bg-cyan-500/10 border border-cyan-500/30 rounded-2xl text-center">
+            <p class="text-gray-300 mb-4">Have questions about the rules? Our AI chatbot is available 24/7 to help!</p>
+            <button onclick="openChatbot()" class="tok-gradient text-black px-6 py-2 rounded-full font-bold hover:opacity-90 transition">
+                💬 Ask Our Chatbot
+            </button>
+        </div>
+    </section>
+
+    <script>
+        function openChatbot() {
+            document.getElementById('chatbot-button').click();
+        }
+    </script>
+</body>
+</html>

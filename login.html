@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | TokSync</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #010101; color: white; }
+        .tok-gradient { background: linear-gradient(90deg, #ff0050 0%, #00f2ea 100%); }
+        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .error-message { color: #ff6b6b; font-size: 12px; margin-top: 8px; display: none; }
+        .success-message { color: #00f2ea; font-size: 12px; margin-top: 8px; display: none; }
+        .input-error { border-color: #ff6b6b !important; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- HEADER -->
+    <header class="py-6 px-6 text-center border-b border-white/10">
+        <div class="max-w-6xl mx-auto">
+            <h1 class="text-3xl font-black uppercase italic tracking-tighter">TokSync</h1>
+            <p class="text-xs text-gray-500 mt-1 uppercase tracking-widest">Welcome Back!</p>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 flex items-center justify-center px-6 py-12">
+        <div class="max-w-md w-full">
+            <!-- LOGIN CARD -->
+            <div class="glass-card rounded-3xl p-8 border border-white/10 mb-8">
+                <div class="text-center mb-8">
+                    <div class="w-16 h-16 rounded-full tok-gradient flex items-center justify-center mx-auto mb-4 shadow-lg">
+                        <svg class="w-8 h-8 text-black" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+                        </svg>
+                    </div>
+                    <h2 class="text-2xl font-black uppercase italic">Login</h2>
+                    <p class="text-xs text-gray-500 mt-2">Sign in to your account</p>
+                </div>
+
+                <form id="login-form" class="space-y-4">
+                    <!-- EMAIL INPUT -->
+                    <div>
+                        <input 
+                            type="email" 
+                            id="login-email" 
+                            placeholder="Email Address" 
+                            class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-cyan-400 outline-none transition"
+                            required
+                        >
+                        <div class="error-message" id="email-error"></div>
+                    </div>
+
+                    <!-- TIKTOK HANDLE INPUT -->
+                    <div>
+                        <input 
+                            type="text" 
+                            id="login-handle" 
+                            placeholder="TikTok Handle (e.g., @username)" 
+                            class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:border-cyan-400 outline-none transition"
+                            required
+                        >
+                        <p class="text-[10px] text-gray-600 mt-2 uppercase font-bold tracking-widest">Must match your signup</p>
+                        <div class="error-message" id="handle-error"></div>
+                    </div>
+
+                    <!-- LOGIN BUTTON -->
+                    <button 
+                        type="submit" 
+                        class="w-full tok-gradient text-black font-black py-4 rounded-xl text-xs uppercase tracking-widest hover:opacity-90 transition transform mt-6 shadow-lg"
+                    >
+                        Sign In to Dashboard
+                    </button>
+
+                    <!-- SUCCESS MESSAGE -->
+                    <div class="success-message text-center" id="success-message">
+                        ✓ Login successful! Redirecting...
+                    </div>
+                </form>
+
+                <!-- DIVIDER -->
+                <div class="my-6 flex items-center space-x-4">
+                    <div class="flex-1 h-px bg-white/10"></div>
+                    <span class="text-xs text-gray-600 uppercase font-bold">or</span>
+                    <div class="flex-1 h-px bg-white/10"></div>
+                </div>
+
+                <!-- NEW USER SIGNUP -->
+                <a href="signup.html" class="block w-full bg-white/5 border border-white/10 text-white font-black py-3 rounded-xl text-xs uppercase tracking-widest text-center hover:bg-white/10 transition">
+                    Create New Account
+                </a>
+            </div>
+
+            <!-- INFO CARDS -->
+            <div class="grid grid-cols-2 gap-4">
+                <div class="glass-card rounded-2xl p-4 text-center border-cyan-400/20">
+                    <div class="text-2xl mb-2">🔐</div>
+                    <p class="text-xs font-bold text-gray-400">Secure Login</p>
+                    <p class="text-[10px] text-gray-600 mt-1">Your data is safe</p>
+                </div>
+
+                <div class="glass-card rounded-2xl p-4 text-center border-pink-500/20">
+                    <div class="text-2xl mb-2">⚡</div>
+                    <p class="text-xs font-bold text-gray-400">Instant Access</p>
+                    <p class="text-[10px] text-gray-600 mt-1">Resume where you left</p>
+                </div>
+            </div>
+
+            <!-- HELP TEXT -->
+            <div class="mt-8 text-center">
+                <p class="text-xs text-gray-600 mb-3">Can't remember your details?</p>
+                <a href="index.html" class="text-cyan-400 text-xs font-bold hover:underline">Go to Home Page</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="py-6 px-6 text-center border-t border-white/10 bg-black/50">
+        <p class="text-xs text-gray-600 uppercase tracking-widest">© 2025 TokSync. All rights reserved.</p>
+    </footer>
+
+    <script src="app.js"></script>
+    <script>
+        const loginForm = document.getElementById('login-form');
+        const loginEmail = document.getElementById('login-email');
+        const loginHandle = document.getElementById('login-handle');
+        const emailError = document.getElementById('email-error');
+        const handleError = document.getElementById('handle-error');
+        const successMessage = document.getElementById('success-message');
+
+        // Check if user already logged in
+        function checkIfLoggedIn() {
+            const userProfile = JSON.parse(localStorage.getItem('userProfile'));
+            if (userProfile && userProfile.email && userProfile.tiktokHandle) {
+                // User already logged in, redirect to dashboard
+                window.location.href = 'dashboard.html';
+            }
+        }
+
+        // Check on page load
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', checkIfLoggedIn);
+        } else {
+            checkIfLoggedIn();
+        }
+
+        // Handle form submission
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            // Reset error messages
+            emailError.style.display = 'none';
+            handleError.style.display = 'none';
+            successMessage.style.display = 'none';
+            loginEmail.classList.remove('input-error');
+            loginHandle.classList.remove('input-error');
+
+            // Get input values
+            const email = loginEmail.value.trim().toLowerCase();
+            const handle = loginHandle.value.trim();
+
+            // Validate email
+            if (!email) {
+                emailError.innerText = 'Email is required';
+                emailError.style.display = 'block';
+                loginEmail.classList.add('input-error');
+                return;
+            }
+
+            // Validate email format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                emailError.innerText = 'Please enter a valid email';
+                emailError.style.display = 'block';
+                loginEmail.classList.add('input-error');
+                return;
+            }
+
+            // Validate handle
+            if (!handle) {
+                handleError.innerText = 'TikTok handle is required';
+                handleError.style.display = 'block';
+                loginHandle.classList.add('input-error');
+                return;
+            }
+
+            // Normalize handle (add @ if missing)
+            let normalizedHandle = handle;
+            if (!normalizedHandle.startsWith('@')) {
+                normalizedHandle = '@' + normalizedHandle;
+            }
+
+            // Get stored user profile
+            const storedProfile = JSON.parse(localStorage.getItem('userProfile'));
+
+            // Check if credentials match
+            if (!storedProfile) {
+                emailError.innerText = 'No account found. Please sign up first.';
+                emailError.style.display = 'block';
+                loginEmail.classList.add('input-error');
+                console.log('No stored profile found');
+                return;
+            }
+
+            // Normalize stored handle
+            let storedHandle = storedProfile.tiktokHandle || '';
+            if (!storedHandle.startsWith('@')) {
+                storedHandle = '@' + storedHandle;
+            }
+
+            // Verify email matches
+            if (storedProfile.email !== email) {
+                emailError.innerText = 'Email does not match our records';
+                emailError.style.display = 'block';
+                loginEmail.classList.add('input-error');
+                console.log('Email mismatch:', storedProfile.email, 'vs', email);
+                return;
+            }
+
+            // Verify handle matches
+            if (storedHandle !== normalizedHandle) {
+                handleError.innerText = 'TikTok handle does not match our records';
+                handleError.style.display = 'block';
+                loginHandle.classList.add('input-error');
+                console.log('Handle mismatch:', storedHandle, 'vs', normalizedHandle);
+                return;
+            }
+
+            // Login successful!
+            console.log('✅ Login successful for:', email);
+            successMessage.style.display = 'block';
+
+            // Disable form during redirect
+            loginForm.style.opacity = '0.5';
+            loginForm.style.pointerEvents = 'none';
+
+            // Redirect to dashboard after 1.5 seconds
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 1500);
+        });
+
+        // Real-time email validation
+        loginEmail.addEventListener('blur', () => {
+            const email = loginEmail.value.trim();
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (email && !emailRegex.test(email)) {
+                emailError.innerText = 'Invalid email format';
+                emailError.style.display = 'block';
+                loginEmail.classList.add('input-error');
+            }
+        });
+
+        loginEmail.addEventListener('focus', () => {
+            emailError.style.display = 'none';
+            loginEmail.classList.remove('input-error');
+        });
+
+        loginHandle.addEventListener('focus', () => {
+            handleError.style.display = 'none';
+            loginHandle.classList.remove('input-error');
+        });
+    </script>
+
+</body>
+</html>

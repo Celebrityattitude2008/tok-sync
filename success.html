@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to the Sync | TokSync</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #010101; }
+        .tok-gradient { background: linear-gradient(90deg, #ff0050 0%, #00f2ea 100%); }
+        .glass-card { 
+            background: rgba(255, 255, 255, 0.03); 
+            backdrop-filter: blur(10px); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+        }
+        .animate-check {
+            animation: scaleIn 0.5s ease-out forwards;
+        }
+        @keyframes scaleIn {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="text-white min-h-screen flex items-center justify-center p-6">
+
+    <div class="max-w-xl w-full text-center">
+        <div class="mb-8 flex justify-center">
+            <div class="animate-check h-24 w-24 rounded-full bg-cyan-400/20 border-2 border-cyan-400 flex items-center justify-center shadow-[0_0_30px_rgba(0,242,234,0.4)]">
+                <svg class="h-12 w-12 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+        </div>
+
+        <h1 class="text-4xl font-black mb-4 tracking-tighter uppercase italic" id="welcome-message">Welcome!</h1>
+        <p class="text-gray-400 mb-10">Your TikTok profile is now synced. You are one step away from joining the daily engagement queue.</p>
+
+        <div class="glass-card rounded-2xl p-6 mb-10 flex items-center justify-between text-left border-cyan-400/30">
+            <div class="flex items-center space-x-4">
+                <img src="logo.png" alt="Profile" class="h-12 w-12 rounded-full border border-white/20 object-cover">
+                <div>
+                    <p class="text-xs font-bold text-cyan-400 uppercase tracking-widest">Connected Account</p>
+                    <p class="text-lg font-black italic" id="success-handle">@YourTikTokHandle</p>
+                </div>
+            </div>
+            <div class="text-right">
+                <p class="text-[10px] text-gray-500 font-bold uppercase">Status</p>
+                <p class="text-xs text-green-400 font-bold">ACTIVE</p>
+            </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-4 text-left">
+            <div class="bg-white/5 p-6 rounded-2xl border border-white/5">
+                <span class="text-2xl mb-2 block">🔥</span>
+                <h3 class="font-bold text-sm mb-2">Earn 5 Points</h3>
+                <p class="text-xs text-gray-500 leading-relaxed">Engage with 5 videos in the dashboard to unlock your link drop.</p>
+            </div>
+            <div class="bg-white/5 p-6 rounded-2xl border border-white/5">
+                <span class="text-2xl mb-2 block">🤝</span>
+                <h3 class="font-bold text-sm mb-2">Follow for Follow</h3>
+                <p class="text-xs text-gray-500 leading-relaxed">Head to the leaderboard to find creators in your niche.</p>
+            </div>
+        </div>
+
+        <a href="dashboard.html" class="inline-block w-full mt-10 tok-gradient text-black font-black py-5 rounded-2xl text-sm uppercase tracking-widest hover:scale-[1.02] transition transform shadow-xl">
+            Go to My Dashboard
+        </a>
+    </div>
+v 
+    <script src="app.js"></script>
+    <script>
+        function displaySuccessProfile() {
+            const handleEl = document.getElementById('success-handle');
+            if (userProfile && userProfile.tiktokHandle) {
+                let handle = userProfile.tiktokHandle;
+                if (!handle.startsWith('@')) {
+                    handle = '@' + handle;
+                }
+                handleEl.innerText = handle;
+            }
+        }
+        
+        function displayWelcomeMessage() {
+            const welcomeEl = document.getElementById('welcome-message');
+            if (userProfile && userProfile.name) {
+                welcomeEl.innerText = `Welcome ${userProfile.name}!`;
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                if (userProfile) {
+                    displaySuccessProfile();
+                    displayWelcomeMessage();
+                } else {
+                    window.location.href = "index.html";
+                }
+            });
+        } else {
+            if (userProfile) {
+                displaySuccessProfile();
+                displayWelcomeMessage();
+            } else {
+                window.location.href = "index.html";
+            }
+        }
+    </script>
+</body>
+</html>
