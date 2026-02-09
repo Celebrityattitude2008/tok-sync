@@ -374,3 +374,14 @@ if (document.readyState === 'loading') {
 } else {
     loadUserPoints();
 }
+
+// Expose important functions to window so inline scripts can call them
+// (app.js is loaded as a module in HTML via <script type="module">)
+window.signupWithEmail = signupWithEmail;
+window.loginWithEmail = loginWithEmail;
+window.logoutUser = logoutUser;
+window.requestNotificationPermission = requestNotificationPermission;
+window.startVerification = startVerification;
+window.awardPoint = awardPoint;
+window.openDropModal = openDropModal;
+window.closeModal = closeModal;
